@@ -1,0 +1,253 @@
+/* LangoLand: the old site's violet→sky gradient, the app's lime logo and clouds, a rounded type. */
+
+:root {
+	--violet: #482cbf;
+	--violet-deep: #2e1a8a;
+	--blue: #5e88fc;
+	--sky: #6ac6f0;
+	--lime: #aeea00;
+	--lemon: #e4ff54;
+	--gradient: linear-gradient(45deg, var(--violet) 0%, var(--blue) 55%, var(--sky) 100%);
+
+	--bg: #ffffff;
+	--bg-soft: #f5f6ff;
+	--surface: #ffffff;
+	--text: #1f1a3d;
+	--text-body: #45406a;
+	--muted: #6c688c;
+	--border: #e3e4f5;
+	--accent: var(--violet);
+	--accent-soft: #ece8ff;
+	--focus: #ff8a00;
+
+	--font-sans: 'Nunito Variable', ui-rounded, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+	--container: 72rem;
+	--gutter: 1rem;
+	--radius: 20px;
+	--shadow: 0 18px 40px -18px rgb(46 26 138 / 0.35);
+
+	color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #120d2b;
+		--bg-soft: #1a1440;
+		--surface: #211a4d;
+		--text: #f3f1ff;
+		--text-body: #cfcaf0;
+		--muted: #a49fcc;
+		--border: #332a6b;
+		--accent: #b9a8ff;
+		--accent-soft: #2a2160;
+		--shadow: 0 18px 40px -18px rgb(0 0 0 / 0.6);
+		color-scheme: dark;
+	}
+}
+
+@media (min-width: 48rem) {
+	:root {
+		--gutter: 1.5rem;
+	}
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+	scroll-padding-top: 5rem;
+	-webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+	*,
+	*::before,
+	*::after {
+		animation: none !important;
+		transition: none !important;
+	}
+}
+
+body {
+	margin: 0;
+	background: var(--bg);
+	color: var(--text-body);
+	font-family: var(--font-sans);
+	font-size: 1.0625rem;
+	line-height: 1.6;
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Decorations (tilted phones, clouds) may poke out sideways; clip them here rather
+   than on body, where mobile browsers would still widen the layout viewport. */
+main {
+	overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+h4 {
+	margin: 0;
+	color: var(--text);
+	font-weight: 850;
+	line-height: 1.15;
+	letter-spacing: -0.01em;
+	text-wrap: balance;
+}
+
+h2 {
+	font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.75rem);
+}
+
+h3 {
+	font-size: 1.25rem;
+}
+
+p {
+	margin: 0;
+	text-wrap: pretty;
+}
+
+a {
+	color: var(--accent);
+	text-underline-offset: 0.2em;
+}
+
+img {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
+:focus-visible {
+	outline: 3px solid var(--focus);
+	outline-offset: 3px;
+	border-radius: 6px;
+}
+
+.container {
+	width: 100%;
+	max-width: var(--container);
+	margin-inline: auto;
+	padding-inline: var(--gutter);
+}
+
+.section {
+	padding-block: clamp(4rem, 3rem + 4vw, 7rem);
+}
+
+.section--soft {
+	background: var(--bg-soft);
+}
+
+.section-head {
+	display: grid;
+	gap: 0.75rem;
+	max-width: 42rem;
+	margin-bottom: clamp(2.5rem, 2rem + 2vw, 4rem);
+}
+
+.section-head--center {
+	margin-inline: auto;
+	text-align: center;
+	justify-items: center;
+}
+
+.section-head p {
+	font-size: 1.125rem;
+}
+
+.eyebrow {
+	display: inline-block;
+	width: fit-content;
+	padding: 0.3rem 0.85rem;
+	border-radius: 999px;
+	background: var(--accent-soft);
+	color: var(--accent);
+	font-size: 0.8125rem;
+	font-weight: 800;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+/* Brand wordmark, as in the app header. */
+.wordmark {
+	font-weight: 900;
+	white-space: nowrap;
+}
+.wordmark__a {
+	color: var(--lime);
+}
+.wordmark__b {
+	color: var(--lemon);
+}
+
+/* Bands that sit on the brand gradient. */
+.on-brand {
+	position: relative;
+	background: var(--gradient);
+	color: rgb(255 255 255 / 0.9);
+	isolation: isolate;
+}
+.on-brand h1,
+.on-brand h2,
+.on-brand h3 {
+	color: #fff;
+}
+.on-brand .eyebrow {
+	background: rgb(255 255 255 / 0.16);
+	color: #fff;
+}
+
+/* Phone frame around app screenshots. */
+.phone {
+	position: relative;
+	width: 100%;
+	max-width: 17rem;
+	aspect-ratio: 1242 / 2688;
+	padding: 3.5%;
+	border-radius: 13% / 6%;
+	background: #15112e;
+	box-shadow:
+		0 0 0 2px #3b347a inset,
+		0 30px 60px -20px rgb(20 10 70 / 0.55);
+}
+.phone img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 10% / 4.6%;
+}
+
+.skip-link {
+	position: absolute;
+	top: -100px;
+	left: 1rem;
+	z-index: 100;
+	padding: 0.5rem 1rem;
+	border-radius: 999px;
+	background: #fff;
+	color: var(--violet);
+	font-weight: 800;
+}
+.skip-link:focus {
+	top: 1rem;
+}
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}

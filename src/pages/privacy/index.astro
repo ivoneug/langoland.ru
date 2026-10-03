@@ -1,0 +1,124 @@
+---
+// URL is referenced from the App Store / Google Play listings — keep it stable.
+import { SITE } from '../../data/site';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const revision = { number: '2.0', date: new Date('2026-10-03'), label: '3\u00a0октября 2026\u00a0г.' };
+---
+
+<BaseLayout
+	title="Политика конфиденциальности"
+	description="Приложение LangoLand не собирает и не передаёт персональные данные: без регистрации, рекламы и аналитики."
+>
+	<section class="doc-hero on-brand">
+		<div class="container doc-hero__inner">
+			<span class="eyebrow">Документы</span>
+			<h1>Политика конфиденциальности</h1>
+			<p>
+				Приложение «LangoLand: Английский» для iOS и Android · редакция {revision.number} от{' '}
+				<time datetime={revision.date.toISOString().slice(0, 10)}>{revision.label}</time>
+			</p>
+		</div>
+	</section>
+
+	<article class="container prose">
+		<p class="prose__summary">
+			<strong>Коротко:</strong> приложение не собирает, не хранит на серверах и не передаёт третьим лицам никаких персональных
+			данных — ни ваших, ни вашего ребёнка.
+		</p>
+
+		<h2>1. Какие данные мы получаем</h2>
+		<p>
+			Никакие. Для работы приложения не нужна регистрация или учётная запись. Приложение не запрашивает имя, номер
+			телефона, адрес электронной почты, геолокацию, а также доступ к камере, микрофону, контактам или фотографиям.
+		</p>
+
+		<h2>2. Что хранится на устройстве</h2>
+		<p>Чтобы ребёнок мог продолжить с того же места, приложение сохраняет прямо на устройстве:</p>
+		<ul>
+			<li>выбранный уровень сложности;</li>
+			<li>количество монет, заработанных в экзамене;</li>
+			<li>настройку фоновой музыки;</li>
+			<li>отметку о том, предлагали ли уже оценить приложение в магазине.</li>
+		</ul>
+		<p>Эти данные никуда не отправляются и удаляются вместе с приложением.</p>
+
+		<h2>3. Реклама, покупки и аналитика</h2>
+		<p>
+			В приложении нет рекламы, встроенных покупок, систем аналитики и сторонних библиотек, которые собирают данные
+			о пользователях.
+		</p>
+
+		<h2>4. Интернет и внешние ссылки</h2>
+		<p>
+			Для работы приложению не нужен интернет: все картинки и звуки находятся внутри него. Приложение открывает внешние
+			страницы только по нажатию пользователя — это страница приложения в App Store или Google Play (чтобы оставить
+			оценку) и профиль разработчика на экране «О нас». На этих сайтах действуют их собственные правила
+			конфиденциальности.
+		</p>
+
+		<h2>5. Дети</h2>
+		<p>
+			Приложение создано в том числе для детей. Поскольку мы не собираем никаких персональных данных, мы не собираем их
+			и у детей.
+		</p>
+
+		<h2>6. Изменения политики</h2>
+		<p>
+			Если политика изменится, мы обновим эту страницу и дату редакции выше. Предыдущая редакция (1.0) относилась
+			к ранним версиям приложения, где была добровольная регистрация по номеру телефона, — в текущих версиях этой
+			функции нет.
+		</p>
+
+		<h2>7. Контакты</h2>
+		<p>
+			Вопросы о конфиденциальности присылайте на <a href={`mailto:${SITE.email}?subject=LangoLand: конфиденциальность`}
+				>{SITE.email}</a
+			>.
+		</p>
+	</article>
+</BaseLayout>
+
+<style>
+	.doc-hero {
+		padding-top: 4.25rem;
+	}
+	.doc-hero__inner {
+		display: grid;
+		gap: 0.9rem;
+		padding-block: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+	}
+	.doc-hero h1 {
+		/* «конфиденциальности» is one long word; keep it inside narrow phones. */
+		font-size: clamp(1.5rem, 0.9rem + 3.2vw, 3.25rem);
+		hyphens: auto;
+		overflow-wrap: break-word;
+	}
+	.prose {
+		max-width: 46rem;
+		padding-block: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+	}
+	.prose__summary {
+		padding: 1.25rem 1.5rem;
+		border-radius: var(--radius);
+		background: var(--accent-soft);
+		color: var(--text);
+		font-size: 1.125rem;
+	}
+	.prose h2 {
+		margin: 2.25rem 0 0.75rem;
+		font-size: 1.375rem;
+	}
+	.prose p + p,
+	.prose ul + p,
+	.prose p + ul {
+		margin-top: 0.75rem;
+	}
+	.prose ul {
+		margin-block: 0;
+		padding-left: 1.4rem;
+	}
+	.prose li + li {
+		margin-top: 0.3rem;
+	}
+</style>

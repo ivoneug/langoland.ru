@@ -1,0 +1,41 @@
+---
+import Clouds from '../components/Clouds.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Страница не найдена">
+	<section class="lost on-brand">
+		<div class="container lost__inner">
+			<span class="eyebrow">404</span>
+			<h1>Ой, такой страницы нет</h1>
+			<p>Возможно, она улетела вместе с облаками. Вернитесь на главную — там много интересного.</p>
+			<a class="lost__home" href="/">На главную</a>
+		</div>
+		<Clouds fill="var(--bg-soft)" />
+	</section>
+</BaseLayout>
+
+<style>
+	.lost {
+		padding: 4.25rem 0 clamp(6rem, 10vw, 9rem);
+	}
+	.lost__inner {
+		display: grid;
+		justify-items: center;
+		gap: 1rem;
+		padding-block: clamp(3rem, 2rem + 6vw, 7rem);
+		text-align: center;
+	}
+	.lost h1 {
+		font-size: clamp(2rem, 1.5rem + 2.5vw, 3.25rem);
+	}
+	.lost__home {
+		margin-top: 0.5rem;
+		padding: 0.75rem 1.5rem;
+		border-radius: 999px;
+		background: var(--lime);
+		color: #1d2a00;
+		font-weight: 850;
+		text-decoration: none;
+	}
+</style>

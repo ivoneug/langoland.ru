@@ -1,0 +1,60 @@
+---
+// Puffy cloud edge, like the bottom of the app's screens. The front layer is filled
+// with the colour of the section that follows, so the band "melts" into it.
+interface Props {
+	fill?: string;
+	class?: string;
+}
+
+const { fill = 'var(--bg)', class: className } = Astro.props;
+
+const WIDTH = 1440;
+const HEIGHT = 140;
+
+// Neighbouring circles always overlap (step < smallest pair of radii), so the edge
+// reads as one cloud bank rather than separate bubbles.
+const bank = (step: number, radii: number[], base: number, offset: number) =>
+	Array.from({ length: Math.ceil(WIDTH / step) + 2 }, (_, i) => {
+		const r = radii[i % radii.length];
+		return { cx: offset + i * step, cy: base - r * 0.35, r };
+	});
+
+const back = bank(110, [70, 58, 82, 64, 76, 60], 92, -40);
+const front = bank(84, [52, 64, 46, 70, 50, 60, 44, 66], 118, -20);
+---
+
+<svg
+	class:list={['clouds', className]}
+	viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+	preserveAspectRatio="xMidYMax slice"
+	aria-hidden="true"
+	style={`--cloud-fill: ${fill}`}
+>
+	<g class="clouds__back">
+		{back.map(({ cx, cy, r }) => <circle cx={cx} cy={cy} r={r} />)}
+		<rect x="0" y="80" width={WIDTH} height={HEIGHT - 80} />
+	</g>
+	<g class="clouds__front">
+		{front.map(({ cx, cy, r }) => <circle cx={cx} cy={cy} r={r} />)}
+		<rect x="0" y="110" width={WIDTH} height={HEIGHT - 110} />
+	</g>
+</svg>
+
+<style>
+	.clouds {
+		position: absolute;
+		inset: auto 0 -1px;
+		z-index: -1;
+		display: block;
+		width: 100%;
+		height: clamp(56px, 9vw, 140px);
+		pointer-events: none;
+	}
+	.clouds__back {
+		fill: #fff;
+		opacity: 0.22;
+	}
+	.clouds__front {
+		fill: var(--cloud-fill);
+	}
+</style>

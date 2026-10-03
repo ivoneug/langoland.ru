@@ -1,0 +1,149 @@
+---
+import { SITE } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer" id="contacts">
+	<div class="container footer__contact">
+		<span class="eyebrow">Контакты</span>
+		<h2>Напишите нам — мы будем рады помочь</h2>
+		<p>Вопросы, идеи для новых тем и отзывы присылайте на почту. Отвечаем на каждое письмо.</p>
+		<div class="footer__email">
+			<a class="footer__mail" href={`mailto:${SITE.email}?subject=LangoLand`}>
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4h13A2.5 2.5 0 0 1 21 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5v-11Zm2.2-.4 6.8 5.3 6.8-5.3a.5.5 0 0 0-.3-.1h-13a.5.5 0 0 0-.3.1ZM19 8.3l-6.4 5a1 1 0 0 1-1.2 0L5 8.3v9.2c0 .3.2.5.5.5h13c.3 0 .5-.2.5-.5V8.3Z"></path></svg>
+				{SITE.email}
+			</a>
+			<button class="footer__copy" type="button" data-copy={SITE.email} hidden>
+				<span aria-live="polite">Скопировать</span>
+			</button>
+		</div>
+	</div>
+	<div class="footer__bottom">
+		<div class="container footer__bottom-inner">
+			<p>© {SITE.since}–{year} <span class="wordmark"><span class="wordmark__a">Lango</span><span class="wordmark__b">Land</span></span></p>
+			<nav aria-label="Документы">
+				<a href="/privacy/">Политика конфиденциальности</a>
+			</nav>
+			<p>Разработчик — <a href={SITE.author.url}>{SITE.author.name}</a></p>
+		</div>
+	</div>
+</footer>
+
+<script>
+	// The copy button only shows up where the Clipboard API is available.
+	const button = document.querySelector<HTMLButtonElement>('.footer__copy');
+	const label = button?.querySelector('span');
+
+	if (button && label && navigator.clipboard) {
+		let reset: number | undefined;
+		button.hidden = false;
+		button.addEventListener('click', async () => {
+			try {
+				await navigator.clipboard.writeText(button.dataset.copy ?? '');
+			} catch {
+				return;
+			}
+			label.textContent = 'Скопировано ✓';
+			button.classList.add('is-copied');
+			clearTimeout(reset);
+			reset = window.setTimeout(() => {
+				label.textContent = 'Скопировать';
+				button.classList.remove('is-copied');
+			}, 2000);
+		});
+	}
+</script>
+
+<style>
+	.footer {
+		background: var(--bg-soft);
+	}
+	.footer__contact {
+		display: grid;
+		justify-items: center;
+		gap: 0.9rem;
+		padding-block: clamp(4rem, 3rem + 4vw, 6.5rem);
+		text-align: center;
+	}
+	.footer__contact p {
+		max-width: 34rem;
+		font-size: 1.125rem;
+	}
+	.footer__email {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.6rem;
+		margin-top: 0.75rem;
+	}
+	.footer__mail {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6rem;
+		padding: 0.85rem 1.5rem;
+		border-radius: 999px;
+		background: var(--gradient);
+		color: #fff;
+		font-size: clamp(1rem, 0.9rem + 0.6vw, 1.25rem);
+		font-weight: 800;
+		text-decoration: none;
+		box-shadow: var(--shadow);
+		overflow-wrap: anywhere;
+	}
+	.footer__mail svg {
+		flex: none;
+		width: 1.4rem;
+		height: 1.4rem;
+		fill: currentColor;
+	}
+	.footer__copy {
+		padding: 0.85rem 1.25rem;
+		border: 2px solid var(--border);
+		border-radius: 999px;
+		background: var(--surface);
+		color: var(--text);
+		font: inherit;
+		font-weight: 750;
+		cursor: pointer;
+	}
+	.footer__copy:hover {
+		border-color: var(--accent);
+	}
+	.footer__copy.is-copied {
+		border-color: #6fb300;
+		color: #4c7d00;
+	}
+	@media (prefers-color-scheme: dark) {
+		.footer__copy.is-copied {
+			color: var(--lime);
+		}
+	}
+	.footer__bottom {
+		border-top: 1px solid var(--border);
+		font-size: 0.9375rem;
+		color: var(--muted);
+	}
+	.footer__bottom-inner {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem 2rem;
+		padding-block: 1.5rem;
+	}
+	.footer__bottom .wordmark__a {
+		color: #6fa800;
+	}
+	.footer__bottom .wordmark__b {
+		color: #a4b800;
+	}
+	@media (prefers-color-scheme: dark) {
+		.footer__bottom .wordmark__a {
+			color: var(--lime);
+		}
+		.footer__bottom .wordmark__b {
+			color: var(--lemon);
+		}
+	}
+</style>

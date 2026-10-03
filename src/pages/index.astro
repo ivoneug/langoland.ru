@@ -1,0 +1,789 @@
+---
+import { Image } from 'astro:assets';
+import sheep from '../assets/brand/sheep.png';
+import activity from '../assets/screens/activity.jpg';
+import examApple from '../assets/screens/exam-apple.jpg';
+import examBear from '../assets/screens/exam-bear.jpg';
+import examSheep from '../assets/screens/exam-sheep.jpg';
+import learnBear from '../assets/screens/learn-bear.jpg';
+import learnDog from '../assets/screens/learn-dog.jpg';
+import learnPeach from '../assets/screens/learn-peach.jpg';
+import menuAmateur from '../assets/screens/menu-amateur.jpg';
+import menuBeginner from '../assets/screens/menu-beginner.jpg';
+import menuExpert from '../assets/screens/menu-expert.jpg';
+import Clouds from '../components/Clouds.astro';
+import Phone from '../components/Phone.astro';
+import StoreButtons from '../components/StoreButtons.astro';
+import { FAQ, LEVELS, TOPIC_COUNT, WORD_COUNT } from '../data/content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const plural = (n: number, forms: [string, string, string]) => {
+	const mod10 = n % 10;
+	const mod100 = n % 100;
+	if (mod10 === 1 && mod100 !== 11) return forms[0];
+	if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return forms[1];
+	return forms[2];
+};
+const topics = (n: number) => `${n} ${plural(n, ['тема', 'темы', 'тем'])}`;
+const words = (n: number) => `${n} ${plural(n, ['слово', 'слова', 'слов'])}`;
+const openLevels = LEVELS.filter((level) => !level.soon).length;
+
+const stats = [
+	{ value: TOPIC_COUNT, label: `${plural(TOPIC_COUNT, ['тема', 'темы', 'тем'])} — от цифр до спорта` },
+	{ value: WORD_COUNT, label: `${plural(WORD_COUNT, ['слово', 'слова', 'слов'])} с живой озвучкой` },
+	{ value: openLevels, label: `${plural(openLevels, ['уровень', 'уровня', 'уровней'])} сложности` },
+	{ value: '0 ₽', label: 'без рекламы и покупок' },
+];
+
+const steps = [
+	{
+		title: 'Выберите уровень и тему',
+		text: `Новичок, Любитель или Знаток — и ${topics(TOPIC_COUNT)}: от цифр и цветов до транспорта и спорта.`,
+		screen: menuAmateur,
+		alt: 'Главный экран LangoLand: уровни сложности и круглые кнопки тем',
+	},
+	{
+		title: 'Слушайте и запоминайте',
+		text: 'Каждое слово — яркая картинка и озвучка на русском и английском. Листайте карточки и повторяйте вслух.',
+		screen: learnDog,
+		alt: 'Карточка слова «Собака — Dog» с большой картинкой и кнопкой воспроизведения',
+	},
+	{
+		title: 'Проверьте себя',
+		text: 'В экзамене приложение просит: «Покажи мне Sheep!» Нашли правильную картинку — получите монету.',
+		screen: examSheep,
+		alt: 'Экран экзамена: задание «Покажи мне Sheep» и четыре картинки на выбор',
+	},
+];
+
+const perks = [
+	{
+		icon: '🚫',
+		title: 'Без рекламы',
+		text: 'Никаких баннеров, роликов и случайных переходов в магазин. Ребёнок занимается, а не нажимает на рекламу.',
+	},
+	{
+		icon: '🔒',
+		title: 'Без сбора данных',
+		text: 'Приложение не просит телефон или почту, не требует регистрации и ничего о ребёнке не отправляет.',
+		link: { href: '/privacy/', label: 'Политика конфиденциальности' },
+	},
+	{
+		icon: '✈️',
+		title: 'Работает без интернета',
+		text: 'Картинки и звуки уже внутри приложения. Можно заниматься в дороге, на даче или в самолёте.',
+	},
+	{
+		icon: '🎓',
+		title: 'С участием педагога',
+		text: 'Приложение разработано при участии сертифицированного педагога с большим опытом обучения малышей.',
+	},
+	{
+		icon: '🎙️',
+		title: 'Живая озвучка',
+		text: 'Слова озвучены профессиональными дикторами на студийном оборудовании — ребёнок сразу слышит правильное произношение.',
+	},
+	{
+		icon: '🎁',
+		title: 'Полностью бесплатно',
+		text: 'Без подписок, пробных периодов и встроенных покупок. Скачали — и занимаетесь.',
+	},
+];
+
+const gallery = [
+	{ src: menuBeginner, caption: 'Уровень «Новичок»' },
+	{ src: activity, caption: 'Учиться или сдать экзамен' },
+	{ src: learnDog, caption: 'Карточка слова' },
+	{ src: examSheep, caption: 'Экзамен' },
+	{ src: menuAmateur, caption: 'Уровень «Любитель»' },
+	{ src: learnPeach, caption: 'Фрукты' },
+	{ src: examApple, caption: 'Найди яблоко' },
+	{ src: menuExpert, caption: 'Уровень «Знаток»' },
+	{ src: learnBear, caption: 'Игрушки' },
+	{ src: examBear, caption: 'Найди мишку' },
+];
+---
+
+<BaseLayout appSchema>
+	<section class="hero on-brand" aria-labelledby="hero-title">
+		<div class="container hero__inner">
+			<div class="hero__copy">
+				<span class="eyebrow">Для iPhone, iPad и Android</span>
+				<h1 id="hero-title">
+					Изучай английский вместе с <span class="wordmark"><span class="wordmark__a">Lango</span><span class="wordmark__b">Land</span></span>
+				</h1>
+				<p class="hero__lead">
+					Приложение, с которым дети легко и весело запоминают английские слова: яркие картинки, живая озвучка и экзамен, за который дают монеты.
+				</p>
+				<StoreButtons />
+				<ul class="hero__checks">
+					<li>Бесплатно</li>
+					<li>Без рекламы</li>
+					<li>Работает офлайн</li>
+				</ul>
+			</div>
+			<div class="hero__art" aria-hidden="true">
+				<Phone class="hero__phone hero__phone--back" src={menuBeginner} alt="" eager />
+				<Phone class="hero__phone hero__phone--front" src={learnBear} alt="" eager />
+				<Image class="hero__sheep" src={sheep} alt="" widths={[160, 320]} sizes="10rem" loading="eager" />
+			</div>
+		</div>
+		<Clouds />
+	</section>
+
+	<div class="container">
+		<ul class="stats">
+			{
+				stats.map((stat) => (
+					<li>
+						<strong>{stat.value}</strong>
+						<span>{stat.label}</span>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+
+	<section class="section" id="how" aria-labelledby="how-title">
+		<div class="container">
+			<div class="section-head section-head--center">
+				<span class="eyebrow">Как это работает</span>
+				<h2 id="how-title">Три шага от картинки до знания</h2>
+				<p>LangoLand превращает новые слова в игру: сначала ребёнок слушает и смотрит, потом проверяет себя.</p>
+			</div>
+			<ol class="steps">
+				{
+					steps.map((step, i) => (
+						<li class="step">
+							<Phone class="step__phone" src={step.screen} alt={step.alt} />
+							<div class="step__body">
+								<span class="step__num">{i + 1}</span>
+								<h3>{step.title}</h3>
+								<p>{step.text}</p>
+							</div>
+						</li>
+					))
+				}
+			</ol>
+		</div>
+	</section>
+
+	<section class="section section--soft" id="topics" aria-labelledby="topics-title">
+		<div class="container">
+			<div class="section-head">
+				<span class="eyebrow">Темы</span>
+				<h2 id="topics-title">
+					{words(WORD_COUNT)} в {TOPIC_COUNT} {TOPIC_COUNT % 10 === 1 && TOPIC_COUNT % 100 !== 11 ? 'теме' : 'темах'}
+				</h2>
+				<p>Слова разбиты на уровни. Начните с «Новичка», а когда всё получится — переходите дальше.</p>
+			</div>
+			<div class="levels">
+				{
+					LEVELS.map((level) =>
+						level.soon ? (
+							<article class="level level--soon">
+								<header class="level__head">
+									<span class="level__emoji" aria-hidden="true">{level.emoji}</span>
+									<div>
+										<h3>{level.name}</h3>
+										<p>Скоро</p>
+									</div>
+								</header>
+								<p class="level__soon">Готовим новые темы: профессии, мебель, хобби и многое другое.</p>
+							</article>
+						) : (
+							<article class="level">
+								<header class="level__head">
+									<span class="level__emoji" aria-hidden="true">{level.emoji}</span>
+									<div>
+										<h3>{level.name}</h3>
+										<p>
+											{topics(level.topics.length)} · {words(level.topics.reduce((n, t) => n + t.words, 0))}
+										</p>
+									</div>
+								</header>
+								<ul class="topics">
+									{level.topics.map((topic) => (
+										<li class="topic">
+											<Image class="topic__icon" src={topic.image} alt="" width={64} height={64} densities={[1, 2]} />
+											<div>
+												<h4>{topic.name}</h4>
+												<p lang="en">{topic.sample}…</p>
+											</div>
+										</li>
+									))}
+								</ul>
+							</article>
+						),
+					)
+				}
+			</div>
+		</div>
+	</section>
+
+	<section class="gallery on-brand" id="gallery" aria-labelledby="gallery-title">
+		<Clouds class="clouds--top" fill="var(--bg-soft)" />
+		<div class="container gallery__head">
+			<div class="section-head">
+				<span class="eyebrow">Галерея</span>
+				<h2 id="gallery-title">Посмотрите, как это выглядит</h2>
+				<p>Облака, животные и яркие цвета — как в хорошей детской книжке.</p>
+			</div>
+			<div class="gallery__controls">
+				<button type="button" data-scroll="-1" aria-label="Назад">
+					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+				</button>
+				<button type="button" data-scroll="1" aria-label="Вперёд">
+					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+				</button>
+			</div>
+		</div>
+		<ul class="gallery__track" data-track tabindex="0" aria-label="Скриншоты приложения">
+			{
+				gallery.map((shot) => (
+					<li>
+						<figure>
+							<Phone src={shot.src} alt={`Скриншот LangoLand: ${shot.caption.toLowerCase()}`} />
+							<figcaption>{shot.caption}</figcaption>
+						</figure>
+					</li>
+				))
+			}
+		</ul>
+		<Clouds />
+	</section>
+
+	<section class="section" id="parents" aria-labelledby="parents-title">
+		<div class="container">
+			<div class="section-head section-head--center">
+				<span class="eyebrow">Родителям</span>
+				<h2 id="parents-title">Можно спокойно дать ребёнку</h2>
+				<p>Мы сделали приложение, которое сами хотели бы видеть на телефоне своих детей.</p>
+			</div>
+			<ul class="perks">
+				{
+					perks.map((perk) => (
+						<li class="perk">
+							<span class="perk__icon" aria-hidden="true">{perk.icon}</span>
+							<h3>{perk.title}</h3>
+							<p>{perk.text}</p>
+							{perk.link && <a href={perk.link.href}>{perk.link.label}</a>}
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</section>
+
+	<section class="section section--soft" id="faq" aria-labelledby="faq-title">
+		<div class="container">
+			<div class="section-head section-head--center">
+				<span class="eyebrow">Вопросы</span>
+				<h2 id="faq-title">Часто задаваемые вопросы</h2>
+			</div>
+			<div class="faq">
+				{
+					FAQ.map((item, i) => (
+						<details class="faq__item" open={i === 0}>
+							<summary>{item.q}</summary>
+							<div class="faq__answer">
+								{item.a.map((p) => (
+									<p>{p}</p>
+								))}
+							</div>
+						</details>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<section class="download on-brand" id="download" aria-labelledby="download-title">
+		<Clouds class="clouds--top" fill="var(--bg-soft)" />
+		<div class="container download__inner">
+			<Image class="download__sheep" src={sheep} alt="" widths={[240, 480]} sizes="15rem" />
+			<div class="download__copy">
+				<h2 id="download-title">
+					Скачайте <span class="wordmark"><span class="wordmark__a">Lango</span><span class="wordmark__b">Land</span></span>
+				</h2>
+				<p>Это бесплатно. Выберите магазин — и уже через минуту можно учить первые слова.</p>
+				<StoreButtons />
+			</div>
+		</div>
+		<Clouds fill="var(--bg-soft)" />
+	</section>
+</BaseLayout>
+
+<script>
+	for (const button of document.querySelectorAll<HTMLButtonElement>('[data-scroll]')) {
+		button.addEventListener('click', () => {
+			const track = document.querySelector<HTMLElement>('[data-track]');
+			if (!track) return;
+			const item = track.querySelector('li');
+			const step = item ? item.getBoundingClientRect().width * 2 : track.clientWidth / 2;
+			track.scrollBy({ left: step * Number(button.dataset.scroll), behavior: 'smooth' });
+		});
+	}
+</script>
+
+<style>
+	/* Hero */
+	.hero {
+		padding-top: 4.25rem;
+		padding-bottom: clamp(5rem, 9vw, 9rem);
+	}
+	.hero__inner {
+		display: grid;
+		align-items: center;
+		gap: 3rem;
+		padding-block: clamp(2.5rem, 2rem + 4vw, 5rem) 2rem;
+	}
+	.hero__copy {
+		display: grid;
+		gap: 1.25rem;
+		justify-items: start;
+	}
+	.hero h1 {
+		font-size: clamp(2.25rem, 1.5rem + 3vw, 3.5rem);
+		line-height: 1.05;
+	}
+	.hero__lead {
+		max-width: 34rem;
+		font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.25rem);
+	}
+	.hero__checks {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.25rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		font-weight: 700;
+	}
+	.hero__checks li::before {
+		content: '✓';
+		margin-right: 0.4rem;
+		color: var(--lime);
+		font-weight: 900;
+	}
+	.hero__art {
+		position: relative;
+		display: grid;
+		place-items: center;
+		min-height: 29rem;
+	}
+	.hero__art :global(.hero__phone) {
+		position: absolute;
+		max-width: min(12.5rem, 46vw);
+	}
+	.hero__art :global(.hero__phone--back) {
+		transform: translateX(-38%) rotate(-7deg) scale(0.9);
+	}
+	.hero__art :global(.hero__phone--front) {
+		transform: translateX(30%) rotate(5deg);
+		animation: float 6s ease-in-out infinite;
+	}
+	.hero__art :global(.hero__sheep) {
+		position: absolute;
+		bottom: -1.5rem;
+		left: 50%;
+		width: 9rem;
+		transform: translateX(-120%);
+		filter: drop-shadow(0 12px 18px rgb(20 10 70 / 0.35));
+		animation: bob 4s ease-in-out infinite;
+	}
+	@keyframes float {
+		50% {
+			transform: translateX(30%) rotate(5deg) translateY(-12px);
+		}
+	}
+	@keyframes bob {
+		50% {
+			transform: translateX(-120%) translateY(-8px) rotate(-3deg);
+		}
+	}
+	@media (min-width: 56rem) {
+		.hero__inner {
+			grid-template-columns: 1.1fr 1fr;
+		}
+		.hero__art {
+			min-height: 34rem;
+		}
+		.hero__art :global(.hero__phone) {
+			max-width: 16.5rem;
+		}
+		.hero__art :global(.hero__sheep) {
+			width: 11rem;
+		}
+	}
+
+	/* Stats */
+	.stats {
+		position: relative;
+		z-index: 2;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1px;
+		margin: clamp(-5.5rem, -6vw, -3rem) 0 0;
+		padding: 0;
+		overflow: hidden;
+		border-radius: var(--radius);
+		background: var(--border);
+		box-shadow: var(--shadow);
+		list-style: none;
+	}
+	.stats li {
+		display: grid;
+		gap: 0.15rem;
+		padding: 1.25rem 1.25rem 1.4rem;
+		background: var(--surface);
+		text-align: center;
+	}
+	.stats strong {
+		background: var(--gradient);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+		font-size: clamp(2rem, 1.6rem + 1.6vw, 2.75rem);
+		font-weight: 900;
+		line-height: 1.1;
+	}
+	.stats span {
+		color: var(--muted);
+		font-size: 0.9375rem;
+		font-weight: 650;
+		line-height: 1.3;
+	}
+	@media (min-width: 48rem) {
+		.stats {
+			grid-template-columns: repeat(4, 1fr);
+		}
+	}
+
+	/* Steps */
+	.steps {
+		display: grid;
+		gap: 3.5rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		counter-reset: step;
+	}
+	.step {
+		display: grid;
+		justify-items: center;
+		gap: 1.75rem;
+		text-align: center;
+	}
+	.step :global(.step__phone) {
+		max-width: 14rem;
+	}
+	.step__body {
+		display: grid;
+		justify-items: center;
+		gap: 0.6rem;
+		max-width: 21rem;
+	}
+	.step__num {
+		display: grid;
+		place-items: center;
+		width: 2.5rem;
+		height: 2.5rem;
+		border-radius: 50%;
+		background: var(--gradient);
+		color: #fff;
+		font-size: 1.125rem;
+		font-weight: 900;
+	}
+	@media (min-width: 56rem) {
+		.steps {
+			grid-template-columns: repeat(3, 1fr);
+			gap: 2rem;
+		}
+		.step:nth-child(2) {
+			margin-top: 3rem;
+		}
+	}
+
+	/* Levels and topics */
+	.levels {
+		display: grid;
+		gap: 1.25rem;
+	}
+	.level {
+		padding: clamp(1.25rem, 1rem + 1vw, 2rem);
+		border-radius: var(--radius);
+		background: var(--surface);
+		box-shadow: 0 1px 0 var(--border);
+	}
+	.level__head {
+		display: flex;
+		align-items: center;
+		gap: 0.9rem;
+		margin-bottom: 1.25rem;
+	}
+	.level__head p {
+		color: var(--muted);
+		font-size: 0.9375rem;
+		font-weight: 650;
+	}
+	.level__emoji {
+		display: grid;
+		place-items: center;
+		width: 3rem;
+		height: 3rem;
+		border-radius: 50%;
+		background: var(--accent-soft);
+		font-size: 1.6rem;
+	}
+	.topics {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 13.5rem), 1fr));
+		gap: 0.75rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.topic {
+		display: flex;
+		align-items: center;
+		gap: 0.85rem;
+		padding: 0.6rem 0.75rem;
+		border-radius: 16px;
+		background: var(--bg-soft);
+	}
+	.topic h4 {
+		font-size: 1rem;
+		font-weight: 800;
+	}
+	.topic p {
+		color: var(--muted);
+		font-size: 0.875rem;
+	}
+	.topic :global(.topic__icon) {
+		flex: none;
+		width: 3.5rem;
+		height: 3.5rem;
+		padding: 0.35rem;
+		border: 3px solid #4f7ff0;
+		border-radius: 50%;
+		background: #6da4ff;
+		object-fit: contain;
+	}
+	@media (max-width: 34rem) {
+		.topics {
+			grid-template-columns: 1fr 1fr;
+		}
+		.topic {
+			flex-direction: column;
+			gap: 0.5rem;
+			padding: 0.9rem 0.5rem;
+			text-align: center;
+		}
+	}
+	.level--soon {
+		border: 2px dashed var(--border);
+		background: transparent;
+		box-shadow: none;
+	}
+	.level--soon .level__head {
+		margin-bottom: 0.5rem;
+	}
+	.level__soon {
+		color: var(--muted);
+	}
+
+	/* Gallery */
+	.gallery {
+		padding-block: clamp(6rem, 10vw, 10rem);
+	}
+	.gallery :global(.clouds--top) {
+		inset: -1px 0 auto;
+		transform: scaleY(-1);
+	}
+	.gallery__head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: end;
+		justify-content: space-between;
+		gap: 1rem 2rem;
+	}
+	.gallery__head .section-head {
+		margin-bottom: 2.5rem;
+	}
+	.gallery__controls {
+		display: flex;
+		gap: 0.5rem;
+		margin-bottom: 2.5rem;
+	}
+	.gallery__controls button {
+		display: grid;
+		place-items: center;
+		width: 3rem;
+		height: 3rem;
+		border: 0;
+		border-radius: 50%;
+		background: rgb(255 255 255 / 0.18);
+		color: #fff;
+		cursor: pointer;
+		transition: background-color 0.2s ease;
+	}
+	.gallery__controls button:hover {
+		background: rgb(255 255 255 / 0.3);
+	}
+	.gallery__controls svg {
+		width: 1.4rem;
+		height: 1.4rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2.5;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+	.gallery__track {
+		display: flex;
+		gap: clamp(1rem, 2vw, 1.75rem);
+		margin: 0;
+		padding: 0.5rem max(var(--gutter), calc((100vw - var(--container)) / 2 + var(--gutter))) 2rem;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		scroll-padding-inline: max(var(--gutter), calc((100vw - var(--container)) / 2 + var(--gutter)));
+		scrollbar-width: thin;
+		scrollbar-color: rgb(255 255 255 / 0.5) transparent;
+		list-style: none;
+	}
+	.gallery__track li {
+		flex: none;
+		width: clamp(11rem, 42vw, 14rem);
+		scroll-snap-align: start;
+	}
+	.gallery__track figure {
+		display: grid;
+		gap: 0.9rem;
+		margin: 0;
+	}
+	.gallery__track figcaption {
+		color: #fff;
+		font-weight: 750;
+		text-align: center;
+	}
+
+	/* Perks */
+	.perks {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+		gap: 1.25rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.perk {
+		display: grid;
+		align-content: start;
+		gap: 0.6rem;
+		padding: 1.75rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		background: var(--surface);
+	}
+	.perk__icon {
+		display: grid;
+		place-items: center;
+		width: 3.25rem;
+		height: 3.25rem;
+		margin-bottom: 0.4rem;
+		border-radius: 16px;
+		background: var(--accent-soft);
+		font-size: 1.6rem;
+	}
+	.perk a {
+		width: fit-content;
+		font-weight: 750;
+	}
+
+	/* FAQ */
+	.faq {
+		display: grid;
+		gap: 0.75rem;
+		max-width: 48rem;
+		margin-inline: auto;
+	}
+	.faq__item {
+		border-radius: 16px;
+		background: var(--surface);
+		box-shadow: 0 1px 0 var(--border);
+	}
+	.faq__item summary {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 1.1rem 1.4rem;
+		color: var(--text);
+		font-size: 1.0625rem;
+		font-weight: 800;
+		cursor: pointer;
+		list-style: none;
+	}
+	.faq__item summary::-webkit-details-marker {
+		display: none;
+	}
+	.faq__item summary::after {
+		content: '';
+		flex: none;
+		width: 0.65rem;
+		height: 0.65rem;
+		margin-top: -0.3rem;
+		border-right: 3px solid var(--accent);
+		border-bottom: 3px solid var(--accent);
+		transform: rotate(45deg);
+		transition: transform 0.2s ease;
+	}
+	.faq__item[open] summary::after {
+		margin-top: 0.3rem;
+		transform: rotate(-135deg);
+	}
+	.faq__answer {
+		display: grid;
+		gap: 0.6rem;
+		padding: 0 1.4rem 1.25rem;
+	}
+
+	/* Download */
+	.download {
+		padding-block: clamp(7rem, 11vw, 10rem);
+	}
+	.download :global(.clouds--top) {
+		inset: -1px 0 auto;
+		transform: scaleY(-1);
+	}
+	.download__inner {
+		display: grid;
+		justify-items: center;
+		gap: 2rem;
+		text-align: center;
+	}
+	.download__copy {
+		display: grid;
+		justify-items: center;
+		gap: 1.1rem;
+	}
+	.download__copy p {
+		max-width: 30rem;
+		font-size: 1.125rem;
+	}
+	.download :global(.download__sheep) {
+		width: clamp(9rem, 20vw, 14rem);
+		filter: drop-shadow(0 14px 20px rgb(20 10 70 / 0.35));
+	}
+	@media (min-width: 48rem) {
+		.download__inner {
+			grid-template-columns: auto 1fr;
+			justify-content: center;
+			text-align: left;
+		}
+		.download__copy {
+			justify-items: start;
+		}
+	}
+</style>

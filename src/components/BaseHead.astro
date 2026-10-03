@@ -1,0 +1,59 @@
+---
+import '@fontsource-variable/nunito/wght.css';
+import '../styles/global.css';
+import { SITE, STORES } from '../data/site';
+
+interface Props {
+	title?: string;
+	description?: string;
+	appSchema?: boolean;
+}
+
+const { title, description = SITE.description, appSchema = false } = Astro.props;
+const fullTitle = title ? `${title} — ${SITE.name}` : SITE.title;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('og.jpg', Astro.site);
+
+const schema = {
+	'@context': 'https://schema.org',
+	'@type': 'MobileApplication',
+	name: SITE.name,
+	description: SITE.description,
+	url: Astro.site?.href,
+	image: ogImage.href,
+	inLanguage: 'ru',
+	operatingSystem: 'iOS, Android',
+	applicationCategory: 'EducationalApplication',
+	offers: { '@type': 'Offer', price: 0, priceCurrency: 'RUB' },
+	installUrl: [STORES.appStore, STORES.googlePlay],
+	author: { '@type': 'Person', name: SITE.author.name, url: SITE.author.url },
+};
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
+<meta name="theme-color" content="#482cbf" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" href="/favicon.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+<link rel="canonical" href={canonicalURL} />
+<meta name="generator" content={Astro.generator} />
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<meta name="apple-itunes-app" content="app-id=1453318711" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:locale" content={SITE.locale} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+
+{appSchema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
